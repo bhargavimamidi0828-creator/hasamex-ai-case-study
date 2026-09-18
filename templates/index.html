@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasamex - Expert Call Analysis</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #cbd5e1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .question-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #374151;
+        }
+
+        .question-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .experts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .expert-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .expert-card h3 {
+            margin-top: 0;
+        }
+
+        .country {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        .answer {
+            line-height: 1.6;
+        }
+
+        .evidence {
+            background: #f8fafc;
+            border-left: 4px solid #111827;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .quote {
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .timestamp {
+            margin-top: 8px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .analysis-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .qa-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .qa-box textarea {
+            width: 100%;
+            min-height: 110px;
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+            resize: vertical;
+        }
+
+        .analysis-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .answer-box {
+            background: #f8fafc;
+            border-left: 4px solid #111827;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 850px) {
+            .experts {
+                grid-template-columns: 1fr;
+            }
+
+            .analysis-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>HASAMEX - EXPERT CALL ANALYSIS</h1>
+        <p>European Robotic Surgery Market</p>
+    </div>
+
+    <div class="container">
+        <div class="question-box">
+            <label for="question">Interview Guide</label>
+            <form method="GET">
+                <select id="question" name="question">
+                    {% for question in questions %}
+                        <option value="{{ question }}" {% if question == selected_question %}selected{% endif %}>
+                            {{ question }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+
+        <h2 class="question-title">{{ selected_question }}</h2>
+
+        <div class="experts">
+            <div class="expert-card">
+                <h3>🇫🇷 France</h3>
+                <div class="country">{{ result["France"]["expert"] }}</div>
+
+                <div class="section-title">Answer</div>
+                <div class="answer">{{ result["France"]["answer"] }}</div>
+
+                <div class="section-title">Evidence</div>
+                {% for evidence in result["France"]["evidence"] %}
+                    <div class="evidence">
+                        <div class="quote">"{{ evidence["quote"] }}"</div>
+                        <div class="timestamp">Timestamp: {{ evidence["timestamp"] }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="expert-card">
+                <h3>🇩🇪 Germany</h3>
+                <div class="country">{{ result["Germany"]["expert"] }}</div>
+
+                <div class="section-title">Answer</div>
+                <div class="answer">{{ result["Germany"]["answer"] }}</div>
+
+                <div class="section-title">Evidence</div>
+                {% for evidence in result["Germany"]["evidence"] %}
+                    <div class="evidence">
+                        <div class="quote">"{{ evidence["quote"] }}"</div>
+                        <div class="timestamp">Timestamp: {{ evidence["timestamp"] }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="expert-card">
+                <h3>🇬🇧 United Kingdom</h3>
+                <div class="country">{{ result["UK"]["expert"] }}</div>
+
+                <div class="section-title">Answer</div>
+                <div class="answer">{{ result["UK"]["answer"] }}</div>
+
+                <div class="section-title">Evidence</div>
+                {% for evidence in result["UK"]["evidence"] %}
+                    <div class="evidence">
+                        <div class="quote">"{{ evidence["quote"] }}"</div>
+                        <div class="timestamp">Timestamp: {{ evidence["timestamp"] }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="analysis-box">
+            <h2>Cross-Transcript Analysis</h2>
+            <div class="analysis-columns">
+                <div>
+                    <h3>Common Themes</h3>
+                    <ul>
+                        {% for item in result["common"] %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Differences / Disagreements</h3>
+                    <ul>
+                        {% for item in result["differences"] %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <section class="ask-section">
+
+            <h2>Ask Across All Transcripts</h2>
+
+            <form method="GET">
+
+                <input
+                    type="hidden"
+                    name="question"
+                    value="{{ selected_question }}"
+                >
+
+                <input
+                    type="text"
+                    name="ask"
+                    value="{{ ask_query }}"
+                    placeholder="Ask a question across all transcripts..."
+                    required
+                >
+
+                <button type="submit">
+                    Search Transcripts
+                </button>
+
+            </form>
+
+            {% if ask_query %}
+
+                <h3>Search Results</h3>
+
+                {% if ask_results %}
+
+                    {% for result in ask_results %}
+
+                        <div class="search-result">
+
+                            <h4>
+                                {{ result.country }}
+                            </h4>
+
+                            <p>
+                                <strong>{{ result.expert }}</strong>
+                            </p>
+
+                            <p>
+                                <strong>Interview Topic:</strong>
+                                {{ result.question }}
+                            </p>
+
+                            <p>
+                                <strong>Timestamp:</strong>
+                                {{ result.timestamp }}
+                            </p>
+
+                            <p>
+                                <strong>Supporting Evidence</strong>
+                            </p>
+
+                            <blockquote>
+                                "{{ result.evidence }}"
+                            </blockquote>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>
+                        No relevant evidence was found.
+                    </p>
+
+                {% endif %}
+
+            {% endif %}
+
+        </section>
+    </div>
+</body>
+</html>
